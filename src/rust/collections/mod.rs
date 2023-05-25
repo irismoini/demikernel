@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 pub mod intrusive;
+pub mod cohort_fifo;
 
 cfg_if! {
     if #[cfg(feature = "catmem-libos")] {

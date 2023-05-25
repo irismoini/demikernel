@@ -7,6 +7,7 @@
 // Imports
 //======================================================================================================================
 
+use super::cohort_fifo::FifoCtrl;
 use crate::{
     collections::raw_array,
     runtime::fail::Fail,
@@ -14,6 +15,7 @@ use crate::{
 use ::core::{
     alloc::Layout,
     mem,
+    mem::size_of,
     sync::atomic::{
         self,
         AtomicUsize,
@@ -276,6 +278,17 @@ where
     fn set_back(&self, val: usize) {
         let back: &AtomicUsize = AtomicUsize::from_mut(unsafe { &mut *self.back_ptr });
         back.store(val, atomic::Ordering::Relaxed);
+    }
+
+    fn create_fifo(&mut self) -> FifoCtrl {
+        FifoCtrl {
+            fifo_length: (self.capacity() * size_of::<T>()).try_into().unwrap(),
+            element_size: (size_of::<T>() / 8).try_into().unwrap(),
+            head_ptr: (&mut self.front_ptr) as *mut *mut usize,
+            tail_ptr: (&mut self.back_ptr) as *mut *mut usize,
+            meta: core::ptr::null_mut(),
+            data_array: unsafe { self.buffer.get_mut().as_mut_ptr() as *mut () },
+        }
     }
 }
 
