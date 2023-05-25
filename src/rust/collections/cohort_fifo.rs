@@ -1,29 +1,40 @@
 use libc::syscall;
 
-type Addr = u64;
-type Len = u32;
-type Ptr = Len;
-type ElSize = u32;
+use crate::collections::ring::RingBuffer;
 
-#[repr(packed)]
-pub struct Meta {
-    addr: Addr,
-    size: ElSize,
-    len: Len,
+const BACKOFF_COUNTER_VAL: u64 = 240;
+struct Cohort<'a, T> {
+    sender: &'a RingBuffer<T>,
+    receiver: &'a RingBuffer<T>,
 }
 
-#[repr(C)]
-pub struct FifoCtrl {
-    pub fifo_length: u32,
-    pub element_size: u32,
-    pub head_ptr: *mut *mut usize,
-    pub tail_ptr: *mut *mut usize,
-    pub meta: *mut Meta,
-    pub data_array: *mut (),
+impl<'a, T: Copy> Cohort<'a, T> {
+    pub fn register(acc_address: usize, sender: &'a mut RingBuffer<T>, receiver: &'a mut RingBuffer<T>) -> Self {
+        unsafe {
+            libc::syscall(
+                258,
+                sender.get_front_ptr(),
+                receiver.get_back_ptr(),
+                acc_address as u64,
+                BACKOFF_COUNTER_VAL,
+            );
+        }
+        Cohort { sender, receiver }
+    }
+
+    /// Sends an element to the accelerator.
+    pub fn push(elem: T) {
+        todo!();
+    }
+
+    /// Reads an element from the accelerator.
+    pub fn pop() -> T {
+        todo!();
+    }
 }
 
-unsafe fn cohort_register(acc_address: *mut(), sw_to_cohort_fifo: &FifoCtrl, cohort_to_sw_fifo: &FifoCtrl, backoff_counter_val: u32) -> i64 {
-    unsafe {
-        syscall(258, sw_to_cohort_fifo.head_ptr as u64, cohort_to_sw_fifo.head_ptr as u64, acc_address as u64, backoff_counter_val)
+impl<'a,T> Drop for Cohort<'a,T> {
+    fn drop(&mut self) {
+        // Unregister thorugh specific syscall.
     }
 }
