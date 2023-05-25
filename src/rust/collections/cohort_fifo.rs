@@ -21,3 +21,9 @@ pub struct FifoCtrl {
     pub meta: *mut Meta,
     pub data_array: *mut (),
 }
+
+unsafe fn cohort_register(acc_address: *mut(), sw_to_cohort_fifo: &FifoCtrl, cohort_to_sw_fifo: &FifoCtrl, backoff_counter_val: u32) -> i64 {
+    unsafe {
+        syscall(258, sw_to_cohort_fifo.head_ptr as u64, cohort_to_sw_fifo.head_ptr as u64, acc_address as u64, backoff_counter_val)
+    }
+}
