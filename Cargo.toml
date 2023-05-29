@@ -54,7 +54,7 @@ windows = { version = "0.44.0", features = ["Win32_Foundation", "Win32_Networkin
 socket2 = "0.4.7"
 
 # Cohort
-cohort = { git = "ssh://git@github.com/irismoini/Cohort.git", branch = "dev" }
+cohort = { git = "ssh://git@github.com/irismoini/Cohort.git", branch = "dev", optional = true }
 
 #=======================================================================================================================
 # Targets
@@ -147,6 +147,7 @@ catcollar-libos = [ "liburing" ]
 catmem-libos = [ ]
 catnip-libos = [ "libdpdk" ]
 catloop-libos = [ "catmem-libos" ]
+cattail-libos = [ "dep:cohort" ]
 libdpdk = [ "dpdk-rs" ]
 mlx4 = [ "dpdk-rs/mlx4" ]
 mlx5 = [ "dpdk-rs/mlx5" ]

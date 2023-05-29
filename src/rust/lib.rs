@@ -53,6 +53,9 @@ mod catmem;
 #[cfg(feature = "catloop-libos")]
 mod catloop;
 
+#[cfg(feature = "cattail-libos")]
+mod cattail;
+
 pub use self::demikernel::libos::{
     name::LibOSName,
     LibOS,
