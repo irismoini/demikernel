@@ -75,7 +75,7 @@ use ::std::{
 // Unfortunately, we have to use a numeric literal value in #[repr(align())] below, and can't use a defined constant.
 // So we make an educated guess and then check that it matches that of our target_arch in a compile-time assert below.
 #[repr(C)]
-#[repr(align(64))]
+#[repr(align(128))]
 #[derive(Debug)]
 struct MetaData {
     // Virtual address of the start of the actual data.
@@ -134,7 +134,7 @@ struct MetaData {
     // Timesync flags for use with IEEE 1588 "Precision Time Protocol" (PTP).
     _timesync: u16,
     // Reserved for dynamic fields.
-    _dynfield: [u32; 9],
+    _dynfield: [u32; 9 + 32],
 }
 
 // Check MetaData structure alignment and size at compile time.

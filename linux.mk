@@ -27,9 +27,9 @@ endif
 export BINDIR ?= $(CURDIR)/bin
 export INCDIR ?= $(CURDIR)/include
 export SRCDIR = $(CURDIR)/src
-export BUILD_DIR := $(CURDIR)/target/release
+export BUILD_DIR := $(CURDIR)/target/riscv64gc-unknown-linux-gnu/release
 ifeq ($(BUILD),dev)
-export BUILD_DIR := $(CURDIR)/target/debug
+export BUILD_DIR := $(CURDIR)/target/riscv64gc-unknown-linux-gnu/debug
 endif
 
 #=======================================================================================================================
