@@ -68,9 +68,9 @@ impl CattailLibOS {
     }
 
     /// Creates a new cohort queue.
-    pub fn create_cohort(&mut self) -> Result<QDesc, Fail> {
+    pub fn create_cohort(&mut self, c_id: u8) -> Result<QDesc, Fail> {
         trace!("create_cohort()");
-        let cohort = Cohort::register(RING_BUFFER_CAPACITY);
+        let cohort = Cohort::register(c_id, RING_BUFFER_CAPACITY);
         let qd = self.qtable.borrow_mut().alloc(CohortQueue::new(cohort));
         Ok(qd)
     }
